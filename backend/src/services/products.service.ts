@@ -31,14 +31,14 @@ export class ProductService {
 
         if (!slug) {
             logger.error('Slug is required')
-            throw new BadRequestException('Slug é obrigatório')
+            throw new BadRequestException('Slug is required')
         }
 
         const product = await this.productRepository.findProductBySlug(slug)
 
         if (!product) {
             logger.error(`Product with slug "${slug}" not found`)
-            throw new NotFoundException(`Produto com slug "${slug}" não encontrado`)
+            throw new NotFoundException(`Product with slug "${slug}" not found`)
             
         }
 
@@ -50,14 +50,14 @@ export class ProductService {
 
         if (!id) {
             logger.error('ID is required')
-            throw new BadRequestException('ID é obrigatório')
+            throw new BadRequestException('ID is required')
         }
 
         const product = await this.productRepository.findProductById(id)
 
         if (!product) {
             logger.error(`Product with id "${id}" not found`);
-            throw new NotFoundException(`Produto com id "${id}" não encontrado`)
+            throw new NotFoundException(`Product with id "${id}" not found`)
         }
 
         return product

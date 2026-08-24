@@ -1,0 +1,57 @@
+import type { Request, Response, NextFunction } from 'express';
+import { UserService } from '../services/user.service.js';
+import logger from '../utils/logger/logger.js';
+
+export default class UserController {
+    constructor(private userService: UserService) {}
+
+    async login(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { email, password } = req.body;
+            const result = await this.userService.login(email, password);
+            logger.info(`POST /users/login - Login successful for email: ${email}`);
+            res.status(200).json(result);
+        } catch (error) {
+            logger.error(`Error on login: ${error instanceof Error ? error.message : String(error)}`);
+            next(error);
+        }
+    }
+
+    async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const user = req.body;
+            const createdUser = await this.userService.createUser(user);
+            logger.info(`POST /users - User created with email: ${createdUser.email}`);
+            res.status(201).json(createdUser);
+        }catch(error){
+            logger.error(`Error creating user: ${error instanceof Error ? error.message : String(error)}`);
+            next(error);
+        }
+    }
+
+    async findUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const id = req.params['id'] as string;
+
+            const user = await this.userService.findUserById(id);
+            logger.info(`GET /users/${id} - User found with email: ${user.email}`);
+            res.status(200).json(user);
+        }catch(error){
+            logger.error(`Error finding user by id: ${error instanceof Error ? error.message : String(error)}`);
+            next(error);
+        }
+    }
+
+    async findEmailByEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const email = req.params['email'] as string;
+            const user = await this.userService.findEmailByEmail(email);
+
+            logger.info(`GET /users/email/${email} - User found with email: ${user.email}`);
+            res.status(200).json(user);
+        }catch(error){
+            logger.error(`Error finding user by email: ${error instanceof Error ? error.message : String(error)}`);
+            next(error);
+        }
+    }
+}
