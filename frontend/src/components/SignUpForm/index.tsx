@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { createUser } from "../../services/user.service";
 import FormItem from "../FormItem";
+import LoadingSpinner from "../LoadingSpinner";
 
 type FormValues = {
   email: string;
@@ -12,11 +13,15 @@ type FormValues = {
   confirmPassword: string;
 };
 
-const initialValues: FormValues = { email: "", password: "", confirmPassword: "" };
+const initialValues: FormValues = {
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
 
-const ContainerForm = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState<FormValues>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,11 +34,16 @@ const ContainerForm = () => {
     { label: "One number", valid: /\d/.test(values.password) },
   ];
   const isPasswordValid = passwordRules.every((rule) => rule.valid);
-  const isConfirmationValid = values.confirmPassword.length > 0 && values.password === values.confirmPassword;
+  const isConfirmationValid =
+    values.confirmPassword.length > 0 &&
+    values.password === values.confirmPassword;
 
-  const showEmailError = (values.email.length > 0 || hasSubmitted) && !isValidEmail(values.email);
-  const showPasswordError = (values.password.length > 0 || hasSubmitted) && !isPasswordValid;
-  const showConfirmationError = (values.confirmPassword.length > 0 || hasSubmitted) && !isConfirmationValid;
+  const showEmailError =
+    (values.email.length > 0 || hasSubmitted) && !isValidEmail(values.email);
+  const showPasswordError =
+    (values.password.length > 0 || hasSubmitted) && !isPasswordValid;
+  const showConfirmationError =
+    (values.confirmPassword.length > 0 || hasSubmitted) && !isConfirmationValid;
 
   const handleChange = (field: keyof FormValues, value: string) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }));
@@ -43,20 +53,30 @@ const ContainerForm = () => {
     event.preventDefault();
     setHasSubmitted(true);
 
-    if (!isValidEmail(values.email) || !isPasswordValid || !isConfirmationValid) {
+    if (
+      !isValidEmail(values.email) ||
+      !isPasswordValid ||
+      !isConfirmationValid
+    ) {
       toast.error("Check the highlighted fields before creating your account.");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      await createUser({ email: values.email.trim(), password: values.password });
+      await createUser({
+        email: values.email.trim(),
+        password: values.password,
+      });
       toast.success("Account created successfully.");
       setValues(initialValues);
       setHasSubmitted(false);
       navigate("/login");
     } catch (error) {
-      const message = error instanceof Error ? error.message : "We couldn't create your account. Please try again.";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "We couldn't create your account. Please try again.";
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -64,7 +84,11 @@ const ContainerForm = () => {
   };
 
   return (
-    <form className={clsx("flex w-full flex-col", "gap-5")} onSubmit={handleSubmit} noValidate>
+    <form
+      className={clsx("flex w-full flex-col", "gap-5")}
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <FormItem
         label="Email address"
         type="email"
@@ -83,13 +107,32 @@ const ContainerForm = () => {
           autoComplete="new-password"
           value={values.password}
           onChange={(event) => handleChange("password", event.target.value)}
-          error={showPasswordError ? "Your password does not meet all requirements." : undefined}
+          error={
+            showPasswordError
+              ? "Your password does not meet all requirements."
+              : undefined
+          }
         />
         {values.password.length > 0 && (
-          <ul className={clsx("mt-2 grid grid-cols-2 gap-x-3 gap-y-1", "font-poppins text-xs text-primary-text-100")}>
+          <ul
+            className={clsx(
+              "mt-2 grid grid-cols-2 gap-x-3 gap-y-1",
+              "font-poppins text-xs text-primary-text-100",
+            )}
+          >
             {passwordRules.map((rule) => (
-              <li key={rule.label} className={clsx("flex items-center gap-1", rule.valid ? "text-green-700" : "text-primary-text-100")}>
-                {rule.valid ? <Check size={14} aria-hidden="true" /> : <X size={14} aria-hidden="true" />}
+              <li
+                key={rule.label}
+                className={clsx(
+                  "flex items-center gap-1",
+                  rule.valid ? "text-green-700" : "text-primary-text-100",
+                )}
+              >
+                {rule.valid ? (
+                  <Check size={14} aria-hidden="true" />
+                ) : (
+                  <X size={14} aria-hidden="true" />
+                )}
                 {rule.label}
               </li>
             ))}
@@ -102,7 +145,9 @@ const ContainerForm = () => {
         placeholder="Enter your password again"
         autoComplete="new-password"
         value={values.confirmPassword}
-        onChange={(event) => handleChange("confirmPassword", event.target.value)}
+        onChange={(event) =>
+          handleChange("confirmPassword", event.target.value)
+        }
         error={showConfirmationError ? "Passwords do not match." : undefined}
         success={isConfirmationValid}
       />
@@ -117,10 +162,16 @@ const ContainerForm = () => {
           "disabled:cursor-not-allowed disabled:opacity-60",
         )}
       >
-        {isSubmitting ? "Creating account..." : "Create account"} <span className={clsx("text-xl font-normal", "leading-none")}>&rarr;</span>
+         {isSubmitting ? (
+            <LoadingSpinner />
+            ) : (
+                <>
+                    Create account <span className={clsx("text-xl font-normal", "leading-none")}>&rarr;</span>
+                </>
+            )}
       </button>
     </form>
   );
 };
 
-export default ContainerForm;
+export default SignUp;

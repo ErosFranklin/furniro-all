@@ -9,6 +9,7 @@ import Shop from "./pages/Shop/page";
 import Cart from "./pages/Cart/page";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignUpPage from "./pages/SignUP/page";
+import LoginPage from "./pages/Login/page";
 
 const App = () => {
     const location = useLocation();
@@ -29,6 +30,7 @@ const App = () => {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/login" element={<LoginPage />} />
             </Routes>
             {!hideHeaderFooter && (
                 <Container className="bg-primary border-t border-t-[rgba(0,0,0,0.17)]">
