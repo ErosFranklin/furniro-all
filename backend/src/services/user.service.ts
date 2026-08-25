@@ -31,7 +31,7 @@ export class UserService {
 
         logger.info(`Creating user with email: ${user.email}`)
         
-        if (!user.email || !user.password || !user.name) {
+        if (!user.email || !user.password) {
             logger.error('Email, password and name are required')
             throw new BadRequestException('Email, password and name are required')
         }
@@ -87,7 +87,7 @@ export class UserService {
         return { token }
     }
 
-    async findEmailByEmail(email: string): Promise<User> {
+    async findEmailByEmail(email: string): Promise<Omit<User, 'password'>> {
         logger.info(`Search user by email: ${email}`)
         if (!email) {
             logger.error('Email is required')
@@ -100,7 +100,8 @@ export class UserService {
             logger.error(`User with email "${email}" not found`);
             throw new NotFoundException(`User with email "${email}" not found`)
         }
+        const { password, ...userWithoutPassword } = user;
 
-        return user;
+        return userWithoutPassword;
     }
 }

@@ -2,6 +2,13 @@ import type { Request, Response, NextFunction } from 'express';
 import { UserService } from '../services/user.service.js';
 import logger from '../utils/logger/logger.js';
 
+type PublicUser = {
+    id: string;
+    email: string;
+};
+
+const toPublicUser = ({ id, email }: PublicUser): PublicUser => ({ id, email });
+
 export default class UserController {
     constructor(private userService: UserService) {}
 
@@ -22,7 +29,7 @@ export default class UserController {
             const user = req.body;
             const createdUser = await this.userService.createUser(user);
             logger.info(`POST /users - User created with email: ${createdUser.email}`);
-            res.status(201).json(createdUser);
+            res.status(201).json(toPublicUser(createdUser));
         }catch(error){
             logger.error(`Error creating user: ${error instanceof Error ? error.message : String(error)}`);
             next(error);
@@ -35,7 +42,7 @@ export default class UserController {
 
             const user = await this.userService.findUserById(id);
             logger.info(`GET /users/${id} - User found with email: ${user.email}`);
-            res.status(200).json(user);
+            res.status(200).json(toPublicUser(user));
         }catch(error){
             logger.error(`Error finding user by id: ${error instanceof Error ? error.message : String(error)}`);
             next(error);
@@ -48,7 +55,7 @@ export default class UserController {
             const user = await this.userService.findEmailByEmail(email);
 
             logger.info(`GET /users/email/${email} - User found with email: ${user.email}`);
-            res.status(200).json(user);
+            res.status(200).json(toPublicUser(user));
         }catch(error){
             logger.error(`Error finding user by email: ${error instanceof Error ? error.message : String(error)}`);
             next(error);
