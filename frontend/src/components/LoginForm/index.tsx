@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/user.service";
 import FormItem from "../FormItem";
 import LoadingSpinner from "../LoadingSpinner";
+import api from "../../services/api";
+import { useAuth } from "../../context/useAuth";
 
 type FormValues = {
   email: string;
@@ -21,8 +23,10 @@ const LoginForm = () => {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const { setUser } = useAuth();
 
-  const showEmailError = (values.email.length > 0 || hasSubmitted) && !isValidEmail(values.email);
+  const showEmailError =
+    (values.email.length > 0 || hasSubmitted) && !isValidEmail(values.email);
   const showPasswordError = hasSubmitted && values.password.length === 0;
 
   const handleChange = (field: keyof FormValues, value: string) => {
@@ -40,15 +44,22 @@ const LoginForm = () => {
 
     try {
       setIsSubmitting(true);
-      const { token } = await loginUser({ email: values.email.trim(), password: values.password });
-      localStorage.setItem("token", token);
+      await loginUser({
+        email: values.email.trim(),
+        password: values.password,
+      });
+      const { data } = await api.get("/users/me");
+      setUser(data);
       toast.success("Signed in successfully.");
-      const redirectTo = typeof location.state?.from === "string" && location.state.from.startsWith("/")
-        ? location.state.from
-        : "/";
+      const redirectTo =
+        typeof location.state?.from === "string" &&
+        location.state.from.startsWith("/")
+          ? location.state.from
+          : "/";
       navigate(redirectTo, { replace: true });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Email or password incorrect.";
+      const message =
+        error instanceof Error ? error.message : "Email or password incorrect.";
       toast.error(message);
     } finally {
       setIsSubmitting(false);
@@ -56,7 +67,11 @@ const LoginForm = () => {
   };
 
   return (
-    <form className={clsx("flex w-full flex-col", "gap-5")} onSubmit={handleSubmit} noValidate>
+    <form
+      className={clsx("flex w-full flex-col", "gap-5")}
+      onSubmit={handleSubmit}
+      noValidate
+    >
       <FormItem
         label="Email address"
         type="email"
@@ -88,12 +103,15 @@ const LoginForm = () => {
         )}
       >
         {isSubmitting ? (
-            <LoadingSpinner />
-            ) : (
-                <>
-                    Sign in <span className={clsx("text-xl font-normal", "leading-none")}>&rarr;</span>
-                </>
-            )}
+          <LoadingSpinner />
+        ) : (
+          <>
+            Sign in{" "}
+            <span className={clsx("text-xl font-normal", "leading-none")}>
+              &rarr;
+            </span>
+          </>
+        )}
       </button>
     </form>
   );

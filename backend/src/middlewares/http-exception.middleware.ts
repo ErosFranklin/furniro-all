@@ -19,6 +19,12 @@ export class BadRequestException extends HttpException {
     }
 }
 
+export class UnauthorizedException extends HttpException {
+    constructor(message: string) {
+        super(message, 401);
+    }
+}
+
 export class NotFoundException extends HttpException {
     constructor(message: string) {
         super(message, 404);
@@ -30,6 +36,8 @@ export class ConflictException extends HttpException {
         super(message, 409);
     }
 }
+
+
 
 export class InternalServerErrorException extends HttpException {
     constructor() {
