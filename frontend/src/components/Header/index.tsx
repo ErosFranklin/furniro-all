@@ -4,6 +4,7 @@ import MobileMenu from "../MobileMenu";
 import NavMenu from "../NavMenu";
 import RightMenu from "../RigthMenu";
 import { Link } from "react-router-dom";
+import CartSideBar from "../CartSideBar";
 
 const Header = () => {
   return (
@@ -34,6 +35,7 @@ const Header = () => {
       </div>
       {/*Essa div serve apenas como elemento para preencher o espaço do fixed*/}
       <div className={clsx("h-25", "-z-50")}></div>
+      <CartSideBar />
     </div>
   );
 };

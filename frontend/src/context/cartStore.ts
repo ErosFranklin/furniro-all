@@ -18,6 +18,9 @@ export type AddCartItem = Omit<CartItem, "id">;
 
 type CartStore = {
   items: CartItem[];
+  isOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
   addItem: (item: AddCartItem) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
@@ -30,7 +33,9 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set) => ({
       items: [],
-
+      isOpen: false,
+      openCart: () => set({ isOpen: true }),
+      closeCart: () => set({ isOpen: false }),
       addItem: (item) =>
         set((state) => {
           const id = createItemId(item);
