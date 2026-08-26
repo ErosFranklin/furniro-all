@@ -182,7 +182,7 @@ const Cart = () => {
                             </div>
                         </div>
 
-                        <aside className="box-border h-[390px] min-w-0 w-full max-w-full overflow-hidden bg-[#F9F1E7] px-6 pt-[15px] sm:px-[75px] xl:w-[393px]">
+                        <aside className="box-border min-w-0 w-full max-w-full overflow-hidden bg-[#F9F1E7] px-6 pt-[15px] pb-8 sm:px-[75px] xl:sticky xl:top-6 xl:h-[390px] xl:w-[393px] xl:self-start xl:pb-0">
                             <div>
                                 <h2 className="whitespace-nowrap text-center text-[28px] font-semibold text-black sm:text-[32px]">
                                     Cart Totals
