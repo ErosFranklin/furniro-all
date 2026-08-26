@@ -17,5 +17,7 @@ router.post('/login', (req, res, next) => userController.login(req, res, next));
 router.post('/', (req, res, next) => userController.createUser(req, res, next));
 router.get('/id/:id', authMiddleware, validateId, (req, res, next) => userController.findUserById(req, res, next));
 router.get('/email/:email', authMiddleware, validateEmail, (req, res, next) => userController.findEmailByEmail(req, res, next));
+router.post('/logout', authMiddleware, (req, res, next) => userController.logout(req, res, next));
+router.get('/me', authMiddleware, (req, res, next) => userController.me(req, res, next));
 
 export const userRoutes = router;
