@@ -1,29 +1,32 @@
 import clsx from "clsx";
-import { Link } from "react-router-dom";
+import { useCartStore } from "../../context/cartStore";
 
 type RightMenuProps = {
     className?: string;
 };
+
 const RightMenu = ({ className }: RightMenuProps) => {
-    const LinkHover: string = "hover:cursor-pointer hover:scale-110 transition";
+    const LinkHover = "hover:cursor-pointer hover:scale-110 transition";
+    const openCart = useCartStore((state) => state.openCart);
+
     return (
         <div className={clsx("flex gap-[33.66px]", className)}>
             <a className={clsx(LinkHover)}>
                 <img
                     src="/Icons/alert.svg"
                     alt="Ícone de alerta"
-                    className={clsx("max-h-[18.66px]")}></img>
+                    className="max-h-[18.66px]"
+                />
             </a>
-            <a className={clsx(LinkHover)}>
-                <Link to={"/cart"} className={clsx(LinkHover)}>
-                    <img
-                        src="/Icons/shop.svg"
-                        alt="Ícone do carrinho"
-                        className="max-h-[22.05px]"
-                    />
-                </Link>
-            </a>
+            <button onClick={openCart} className={clsx(LinkHover, "bg-transparent border-none p-0")}>
+                <img
+                    src="/Icons/shop.svg"
+                    alt="Ícone do carrinho"
+                    className="max-h-[22.05px]"
+                />
+            </button>
         </div>
     );
 };
+
 export default RightMenu;
