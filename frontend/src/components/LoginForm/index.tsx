@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/user.service";
 import FormItem from "../FormItem";
 import LoadingSpinner from "../LoadingSpinner";
@@ -17,6 +17,7 @@ const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [values, setValues] = useState<FormValues>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -42,7 +43,10 @@ const LoginForm = () => {
       const { token } = await loginUser({ email: values.email.trim(), password: values.password });
       localStorage.setItem("token", token);
       toast.success("Signed in successfully.");
-      navigate("/");
+      const redirectTo = typeof location.state?.from === "string" && location.state.from.startsWith("/")
+        ? location.state.from
+        : "/";
+      navigate(redirectTo, { replace: true });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Email or password incorrect.";
       toast.error(message);
