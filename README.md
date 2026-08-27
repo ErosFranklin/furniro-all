@@ -53,7 +53,7 @@ Aplicação full stack de uma loja de móveis e decoração, criada para o progr
 - Checkout em `/checkout`, também protegido e disponível somente com itens no carrinho. O formulário valida os dados, busca endereço brasileiro pelo CEP usando ViaCEP e permite transferência bancária ou pagamento na entrega.
 - Página 404 para rotas inexistentes e para produtos não encontrados.
 
-> Os formulários de contato e checkout são demonstrações de interface: o contato apenas confirma o envio na tela; o checkout mostra sucesso e limpa o carrinho. Não há envio de mensagem, criação de pedido, integração de pagamento ou persistência de dados de entrega no backend.
+> **Nota sobre segurança:** o carrinho de compras, por não conter dados sensíveis, é persistido no `localStorage` via Zustand
 
 ### Backend
 
@@ -64,6 +64,8 @@ Aplicação full stack de uma loja de móveis e decoração, criada para o progr
 - Autorização das consultas de usuário por cookie JWT, com validade de 7 dias.
 - Validação de slug, ObjectId e e-mail; tratamento centralizado de erros HTTP e logs com Winston.
 - Seed que gera 30 produtos com imagens locais.
+
+> **Nota sobre segurança:** o token de autenticação é armazenado em um cookie `HttpOnly`, `Secure` (em produção) e `SameSite=Lax`
 
 ## Estrutura do projeto
 
