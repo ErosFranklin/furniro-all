@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Container from "../../components/Container";
 import BenefitsCard from "../../components/BenefitsCard";
 import { useCart } from "../../context/useCart";
-import toast from "react-hot-toast";
 import BannerCard from "../../components/BannerCard";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
@@ -203,13 +202,11 @@ const Cart = () => {
                                         Rs. {formatRs(total)}
                                     </span>
                                 </div>
-                                <button
-                                    type="button"
-                                    disabled={items.length === 0}
-                                    onClick={() => {
-                                        toast.success(
-                                            "check-out realizado com sucesso!",
-                                        );
+                                <Link
+                                    to="/checkout"
+                                    aria-disabled={items.length === 0}
+                                    onClick={(event) => {
+                                        if (items.length === 0) event.preventDefault();
                                     }}
                                     className={clsx(
                                         "mx-auto mt-[50px] inline-flex h-[59px] w-full max-w-[222px] cursor-pointer items-center justify-center rounded-[15px] border border-black bg-transparent text-[20px] text-black transition hover:bg-white/50",
@@ -217,7 +214,7 @@ const Cart = () => {
                                             "opacity-50 cursor-not-allowed",
                                     )}>
                                     Check Out
-                                </button>
+                                </Link>
                             </div>
                         </aside>
                     </div>

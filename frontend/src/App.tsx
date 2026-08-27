@@ -13,10 +13,13 @@ import LoginPage from "./pages/Login/page";
 import ContactPage from "./pages/Contact/page";
 import {useAuth} from "./context/useAuth";
 import LoadingSpinner from "./components/LoadingSpinner";
+import CheckoutPage from "./pages/Checkout/page";
+import { useCartStore } from "./context/cartStore";
 
 const App = () => {
   const location = useLocation();
   const { isAuthenticated, isLoading } = useAuth();
+  const cartItems = useCartStore((state) => state.items);
   const noHeaderFooterRoutes = ["/signup", "/login"];
   const hideHeaderFooter = noHeaderFooterRoutes.includes(location.pathname);
   if (isLoading) {
@@ -54,6 +57,23 @@ const App = () => {
             )
           }
         />
+        <Route
+          path="/checkout"
+          element={
+            isAuthenticated && cartItems.length > 0 ? (
+              <CheckoutPage />
+            ) : isAuthenticated ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Navigate
+                to="/login"
+                replace
+                state={{
+                  from: location.pathname + location.search + location.hash,
+                }}
+              />
+            )
+          } />
       </Routes>
       {!hideHeaderFooter && (
         <Container className="bg-primary border-t border-t-[rgba(0,0,0,0.17)]">

@@ -8,7 +8,6 @@ import  GPS  from "../../../public/Icons/gps.svg";
 import Phone from "../../../public/Icons/phone.svg";
 import Clock from "../../../public/Icons/clock.svg";
 import ContactForm from "../../components/ContactForm";
-import LoadingSpinner from "../../components/LoadingSpinner";
 
 
 const ContactPage = () => {
