@@ -24,6 +24,7 @@ type CartStore = {
   addItem: (item: AddCartItem) => void;
   updateQuantity: (id: string, quantity: number) => void;
   removeItem: (id: string) => void;
+  clearCart: () => void;
 };
 
 const createItemId = (item: AddCartItem) =>
@@ -72,6 +73,7 @@ export const useCartStore = create<CartStore>()(
         set((state) => ({
           items: state.items.filter((item) => item.id !== id),
         })),
+      clearCart: () => set({ items: [] }),
     }),
     {
       name: "furniro-cart",
