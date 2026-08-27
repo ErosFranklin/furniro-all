@@ -39,3 +39,17 @@ export const loginUser = async ({ email, password }: { email: string; password: 
     throw error;
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    await api.post("/users/logout");
+  } catch (error) {
+    if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      throw new Error(
+        error.response?.data?.error ?? "We couldn't log you out. Please try again.",
+        { cause: error },
+      );
+    }
+    throw error;
+  }
+};
