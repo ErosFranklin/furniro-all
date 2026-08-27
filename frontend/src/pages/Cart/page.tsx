@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Container from "../../components/Container";
 import BenefitsCard from "../../components/BenefitsCard";
 import { useCart } from "../../context/useCart";
-import toast from "react-hot-toast";
 import BannerCard from "../../components/BannerCard";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
@@ -182,7 +181,7 @@ const Cart = () => {
                             </div>
                         </div>
 
-                        <aside className="box-border h-[390px] min-w-0 w-full max-w-full overflow-hidden bg-[#F9F1E7] px-6 pt-[15px] sm:px-[75px] xl:w-[393px]">
+                        <aside className="box-border min-w-0 w-full max-w-full overflow-hidden bg-[#F9F1E7] px-6 pt-[15px] pb-8 sm:px-[75px] xl:sticky xl:top-6 xl:h-[390px] xl:w-[393px] xl:self-start xl:pb-0">
                             <div>
                                 <h2 className="whitespace-nowrap text-center text-[28px] font-semibold text-black sm:text-[32px]">
                                     Cart Totals
@@ -203,13 +202,11 @@ const Cart = () => {
                                         Rs. {formatRs(total)}
                                     </span>
                                 </div>
-                                <button
-                                    type="button"
-                                    disabled={items.length === 0}
-                                    onClick={() => {
-                                        toast.success(
-                                            "check-out realizado com sucesso!",
-                                        );
+                                <Link
+                                    to="/checkout"
+                                    aria-disabled={items.length === 0}
+                                    onClick={(event) => {
+                                        if (items.length === 0) event.preventDefault();
                                     }}
                                     className={clsx(
                                         "mx-auto mt-[50px] inline-flex h-[59px] w-full max-w-[222px] cursor-pointer items-center justify-center rounded-[15px] border border-black bg-transparent text-[20px] text-black transition hover:bg-white/50",
@@ -217,7 +214,7 @@ const Cart = () => {
                                             "opacity-50 cursor-not-allowed",
                                     )}>
                                     Check Out
-                                </button>
+                                </Link>
                             </div>
                         </aside>
                     </div>

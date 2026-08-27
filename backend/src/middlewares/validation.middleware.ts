@@ -18,3 +18,13 @@ export const validateId = (req: Request, _res: Response, next: NextFunction) => 
     }
     next()
 }
+
+export const validateEmail = (req: Request, _res: Response, next: NextFunction) => {
+    const email = req.params['email'] as string
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+        return next(new BadRequestException('Email inválido'))
+    }
+    next()
+}
+
